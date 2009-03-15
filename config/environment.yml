@@ -1,0 +1,2 @@
+database:
+  path: @@INSTALLDIR@@/db/homeagent.db
