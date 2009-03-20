@@ -1,0 +1,21 @@
+
+Internet Housekeeping [i-housekeeping] - README
+http://www.i-housekeeping.co.cc
+
+
+Internet Housekeeping is a web desktop ported to RubyOnRails platform from
+Comet Desktop.  Comet Desktop is a web desktop forked from qWikiOffice Desktop.
+License: GPL v3
+
+Internet Housekeeping consists of two application. The first is HomeAgent module, 
+which holds customers private info and can respond with this info. The second 
+application is i-housekeeping wen desktop SaaS web application. i-housekeeping 
+includes a number of business mashup modules which handle everyday housekeeping
+tasks and money balancing.
+
+See the LICENSE file for license information or
+http://www.i-housekeeping.co.cc/LICENSE
+
+Thank you,
+
+The i-housekeeping team

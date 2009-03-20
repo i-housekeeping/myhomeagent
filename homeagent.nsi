@@ -4,7 +4,7 @@
 !define PRODUCT_NAME "HomeAgent"
 !define PRODUCT_VERSION "0.1"
 !define PRODUCT_PUBLISHER "i-Housekeeping, Inc."
-!define PRODUCT_WEB_SITE "http://www.i-housekeeping.com"
+!define PRODUCT_WEB_SITE "http://www.i-housekeeping.co.cc"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\homeagent.exe"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
@@ -20,7 +20,7 @@
 ; MUI Settings
 !define MUI_ABORTWARNING
 !define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\kfm_home.ico"
-!define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\kfm_home.ico"
+!define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\orange-install-nsis.ico"
 
 ; Language Selection Dialog Settings
 !define MUI_LANGDLL_REGISTRY_ROOT "${PRODUCT_UNINST_ROOT_KEY}"
@@ -40,7 +40,7 @@
 !insertmacro MUI_PAGE_WELCOME
 
 ; License page
-;!insertmacro MUI_PAGE_LICENSE "..\..\path\to\licence\YourSoftwareLicence.txt"
+!insertmacro MUI_PAGE_LICENSE "LICENSE"
 
 ; Directory page
 !insertmacro MUI_PAGE_DIRECTORY
@@ -49,9 +49,9 @@
 !insertmacro MUI_PAGE_INSTFILES
 
 ; Finish page
-;!define MUI_FINISHPAGE_RUN "$INSTDIR\homeagent.exe"
 !define MUI_FINISHPAGE_TITLE "Thank you."
 !define MUI_FINISHPAGE_TEXT "Thank you for choosing the i-housekeeping software."
+!define MUI_FINISHPAGE_RUN "$INSTDIR\homeagent.exe"
 !insertmacro MUI_PAGE_FINISH
 
 
