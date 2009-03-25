@@ -3,9 +3,10 @@
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "HomeAgent"
 !define PRODUCT_VERSION "0.1"
-!define PRODUCT_PUBLISHER "i-Housekeeping, Inc."
+!define PRODUCT_PUBLISHER "Internet Housekeeping, Inc."
 !define PRODUCT_WEB_SITE "http://www.i-housekeeping.co.cc"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\homeagent.exe"
+;!define PRODUCT_REGKEY "Software\Conduit\AppPaths\homeagent.exe" - defined for toolbar
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 
@@ -35,7 +36,7 @@
 
 ; Welcome page
 !define MUI_WELCOMEPAGE_TITLE "Welcome to HomeAgent Setup Wizard"
-!define MUI_WELCOMEPAGE_TEXT "Thank you for choosing the i-housekeeping software."
+!define MUI_WELCOMEPAGE_TEXT "Thank you for choosing the Internet Housekeeping software."
 !define MUI_WELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\arrow.bmp"
 !insertmacro MUI_PAGE_WELCOME
 
@@ -50,10 +51,11 @@
 
 ; Finish page
 !define MUI_FINISHPAGE_TITLE "Thank you."
-!define MUI_FINISHPAGE_TEXT "Thank you for choosing the i-housekeeping software."
-!define MUI_FINISHPAGE_RUN "$INSTDIR\homeagent.exe"
+!define MUI_FINISHPAGE_TEXT "Thank you for choosing the Internet Housekeeping software."
+;!define MUI_FINISHPAGE_RUN "$INSTDIR\homeagent.exe"
 !insertmacro MUI_PAGE_FINISH
 
+!define NameStr "HomeAgent" ; The string that the context menu will display
 
 
 ; Uninstaller pages
@@ -74,7 +76,6 @@
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 OutFile "homeagentsetup.exe"
 InstallDir "$PROGRAMFILES\HomeAgent"
-InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show
 
@@ -88,6 +89,15 @@ Function .onInit
 	#File /oname=$PLUGINSDIR\splash.wav "C:\myprog\sound.wav"
         
 	splash::show 2000 $PLUGINSDIR\splash
+
+
+        
+        ;ReadRegStr $INSTDIR HKLM "${PRODUCT_DIR_REGKEY}"  "homeagent.exe"
+        ;IfErrors +2
+        ;StrCmp $INSTDIR "" 0 +2
+                ;Exec '"$INSTDIR\someprogram.exe"'
+         ;       Abort
+        
 
 	Pop $0 ; $0 has '1' if the user closed the splash screen early,
 			; '0' if everything closed normal
@@ -106,24 +116,28 @@ Section "MainSection" SEC01
         CreateDirectory "$SMPROGRAMS\HomeAgent"
         CreateShortCut "$SMPROGRAMS\HomeAgent\HomeAgent.lnk" "$INSTDIR\homeagent.exe"
         CreateShortCut "$DESKTOP\HomeAgent.lnk" "$INSTDIR\homeagent.exe"
+        SetOutPath "$INSTDIR"
+        WriteRegStr HKCR "exefile\shell\${NameStr}\command" "" "$INSTDIR\homeagent.exe -9 $\"%1$\""
+        File "homeagent.exe"
 SectionEnd
 
 Section -AdditionalIcons
-  WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
-  CreateShortCut "$SMPROGRAMS\HomeAgent\Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
+  WriteIniStr "$INSTDIR\InternetHousekeeping.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
+  CreateShortCut "$SMPROGRAMS\HomeAgent\InternetHousekeeping.lnk" "$INSTDIR\InternetHousekeeping.url"
   CreateShortCut "$SMPROGRAMS\HomeAgent\Uninstall.lnk" "$INSTDIR\uninst.exe"
 SectionEnd
 
 Section -Post
   WriteUninstaller "$INSTDIR\uninst.exe"
   WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\homeagent.exe"
+  ;WriteRegStr HKLM "${PRODUCT_REGKEY}" "AppPath" "$INSTDIR\homeagent.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\uninst.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\homeagent.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
-  
+
   !ifdef ALL_USERS
     !define ReadEnvStr_RegKey \
        'HKLM "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"'
@@ -152,15 +166,14 @@ Function un.onInit
 FunctionEnd
 
 Section Uninstall
-  Delete "$INSTDIR\${PRODUCT_NAME}.url"
+  Delete "$INSTDIR\InternetHousekeeping.url"
   Delete "$INSTDIR\uninst.exe"
   Delete "$INSTDIR\homeagent.exe"
   Delete "$INSTDIR\db\homeagent.db"
   Delete "$INSTDIR\config\environment.yml"
 
   Delete "$SMPROGRAMS\HomeAgent\Uninstall.lnk"
-  Delete "$SMPROGRAMS\HomeAgent\Website.lnk"
-  Delete "$DESKTOP\HomeAgent.lnk"
+  Delete "$SMPROGRAMS\HomeAgent\InternetHousekeeping.lnk"
   Delete "$SMPROGRAMS\HomeAgent\HomeAgent.lnk"
 
   RMDir "$SMPROGRAMS\HomeAgent"
@@ -175,5 +188,6 @@ Section Uninstall
 
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"
   DeleteRegKey HKLM "${PRODUCT_DIR_REGKEY}"
+  ;DeleteRegKey HKLM "${PRODUCT_REGKEY}"
   SetAutoClose true
 SectionEnd
